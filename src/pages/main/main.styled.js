@@ -12,6 +12,7 @@ export const MainContainer = styled.div`
 
 export const VideoWrapper = styled.div`
   position: relative;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;

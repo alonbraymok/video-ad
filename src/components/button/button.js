@@ -2,18 +2,25 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 200px;
+  height: 60px;
   object-fit: contain;
   border-radius: 8px;
-  background-color: #b5b5b5b3;
+  background: linear-gradient(
+    74deg,
+    rgba(1, 11, 156, 1) 0%,
+    rgba(43, 156, 212, 0.7693452380952381) 37%,
+    rgba(46, 93, 214, 1) 100%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-size: 25px;
+  color: #fff;
 `;
 
-export function FashionButton({ onClick, title, style }) {
+export function IronButton({ onClick, title, style }) {
   return (
     <Wrapper
       onClick={onClick}

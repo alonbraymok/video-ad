@@ -1,16 +1,15 @@
 import React, { useRef, useEffect, useState } from "react";
 import { MainContainer, VideoWrapper, ButtonWrapper } from "./main.styled";
 import { fireTrackingPixel } from "../../services/main";
-import { VIDEO_SOURCE } from "../../utils/urls";
-
-export function sleep(ms = 0) {
-  return new Promise((r) => setTimeout(r, ms));
-}
+import { VIDEO_SOURCE, DOWNLOAD_ANDROID } from "../../utils/urls";
+import { sleep } from "../../utils/functions";
+import { SPIN, START, DOWNLOAD_NOW, END, NONE } from "../../utils/constans";
+import { IronButton } from "../../components/button/button";
 
 export default function Main() {
   const [displayButton, setDisplayButton] = useState(false);
   const [disablePause, setDisablePause] = useState(false);
-  const [buttonTitle, setButtonTitle] = useState("Spin");
+  const [buttonTitle, setButtonTitle] = useState(SPIN);
 
   const videoRef = useRef(null);
 
@@ -19,39 +18,7 @@ export default function Main() {
   }, [videoRef]);
 
   function onStart() {
-    fireTrackingPixel("start");
-  }
-
-  function onEnd() {
-    fireTrackingPixel("end");
-  }
-
-  async function handleFirstPause() {
-    videoRef.current.pause();
-    const videoCurrentTime = videoRef.current.currentTime;
-    setDisplayButton(true);
-    await sleep(10000);
-    if (videoRef.current.currentTime === videoCurrentTime) {
-      videoRef.current.currentTime = 21.0;
-      videoRef.current.play();
-    }
-  }
-
-  function handleDownloadButton() {
-    setDisplayButton(true);
-    setButtonTitle("Download now");
-  }
-
-  function handleSpinClick() {
-    videoRef.current.play();
-    setDisplayButton(false);
-    setDisablePause(true);
-  }
-
-  function handleDownloadClick() {
-    window.open(
-      "https://play.google.com/store/apps/details?id=com.huuuge.casino.texas&hl=en"
-    );
+    fireTrackingPixel(START);
   }
 
   function onVideoTimeUpdate(e) {
@@ -70,6 +37,37 @@ export default function Main() {
     }
   }
 
+  async function handleFirstPause() {
+    const videoCtx = videoRef.current;
+    videoCtx.pause();
+    setDisablePause(true);
+    const videoCurrentTime = videoCtx.currentTime;
+    setDisplayButton(true);
+    await sleep(10000);
+    if (videoCtx.currentTime === videoCurrentTime) {
+      videoCtx.currentTime = 21.0;
+      videoCtx.play();
+    }
+  }
+
+  function handleDownloadButton() {
+    setDisplayButton(true);
+    setButtonTitle(DOWNLOAD_NOW);
+  }
+
+  function handleSpinClick() {
+    videoRef.current.play();
+    setDisplayButton(false);
+  }
+
+  function handleDownloadClick() {
+    window.open(DOWNLOAD_ANDROID);
+  }
+
+  function onEnd() {
+    fireTrackingPixel(END);
+  }
+
   return (
     <MainContainer>
       <VideoWrapper>
@@ -86,14 +84,13 @@ export default function Main() {
         </video>
       </VideoWrapper>
       <ButtonWrapper>
-        <button
-          style={{ display: !displayButton && "none" }}
-          onClick={
-            buttonTitle === "Spin" ? handleSpinClick : handleDownloadClick
-          }
+        <IronButton
+          title={buttonTitle}
+          style={{ display: !displayButton && NONE }}
+          onClick={buttonTitle === SPIN ? handleSpinClick : handleDownloadClick}
         >
           {buttonTitle}
-        </button>
+        </IronButton>
       </ButtonWrapper>
     </MainContainer>
   );
