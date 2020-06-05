@@ -1,10 +1,18 @@
 import React, { useRef, useEffect, useState } from "react";
 import { MainContainer, VideoWrapper, ButtonWrapper } from "./main.styled";
 import { fireTrackingPixel } from "../../services/main";
-import { VIDEO_SOURCE, DOWNLOAD_ANDROID } from "../../utils/urls";
+import { VIDEO_SOURCE, DOWNLOAD_ANDROID, DOWNLOAD_IOS } from "../../utils/urls";
 import { sleep } from "../../utils/functions";
-import { SPIN, START, DOWNLOAD_NOW, END, NONE } from "../../utils/constans";
+import {
+  SPIN,
+  START,
+  DOWNLOAD_NOW,
+  END,
+  NONE,
+  NOT_SUPPORTED,
+} from "../../utils/constans";
 import { IronButton } from "../../components/button/button";
+import { isAndroid, isIOS } from "react-device-detect";
 
 export default function Main() {
   const [displayButton, setDisplayButton] = useState(false);
@@ -61,7 +69,13 @@ export default function Main() {
   }
 
   function handleDownloadClick() {
-    window.open(DOWNLOAD_ANDROID);
+    if (isAndroid) {
+      window.open(DOWNLOAD_ANDROID);
+    } else if (isIOS) {
+      window.open(DOWNLOAD_IOS);
+    } else {
+      alert(NOT_SUPPORTED);
+    }
   }
 
   function onEnd() {

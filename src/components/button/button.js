@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   cursor: pointer;
   font-size: 25px;
   color: #fff;
+  font-weight: 700;
 `;
 
 export function IronButton({ onClick, title, style }) {

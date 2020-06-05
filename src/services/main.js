@@ -14,6 +14,6 @@ export async function fireTrackingPixel(status) {
         break;
     }
   } catch (error) {
-    alert(error);
+    alert("Something went wrong...");
   }
 }
